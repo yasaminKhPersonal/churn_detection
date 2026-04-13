@@ -1,3 +1,3 @@
-from churn_root_agent.agent import app
+from agent import app
 
 __all__ = ["app"]
