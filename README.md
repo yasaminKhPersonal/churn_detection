@@ -17,3 +17,24 @@ GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
 CONSUMPTION_TABLE=YOUR_PROJECT_ID.YOUR_DATASET.consumption_stats_yearly
 INTERACTIONS_TABLE=YOUR_PROJECT_ID.YOUR_DATASET.omnichannel_customer_interactions
 ```
+
+## Data Schema
+
+Here are the expected schemas for the BigQuery tables used by the agents:
+
+### Consumption Stats Table (`CONSUMPTION_TABLE`)
+| Field Name | Type | Mode |
+| :--- | :--- | :--- |
+| **customer_id** | STRING | NULLABLE |
+| **usage_date** | DATE | NULLABLE |
+| **active_minutes** | INTEGER | NULLABLE |
+| **feature_usage_count** | INTEGER | NULLABLE |
+| **gb_processed** | FLOAT | NULLABLE |
+
+### Omnichannel Customer Interactions Table (`INTERACTIONS_TABLE`)
+| Field Name | Type | Mode |
+| :--- | :--- | :--- |
+| **User ID** | STRING | NULLABLE |
+| **Date** | DATE | NULLABLE |
+| **Source** | STRING | NULLABLE |
+| **Raw Interaction Text** | STRING | NULLABLE |
