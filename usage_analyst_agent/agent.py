@@ -7,7 +7,7 @@ import google.auth
 from google.cloud import bigquery
 
 _, project_id = google.auth.default()
-os.environ["GOOGLE_CLOUD_PROJECT"] = "gab-ce-demos-1" 
+os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID")
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
@@ -21,8 +21,8 @@ def usage_drop_detector(query: str = "") -> str:
         A string listing flagged customers or a summary.
     """
     print(f"DEBUG: usage_drop_detector called with query='{query}'")
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "gab-ce-demos-1")
-    table_name = "gab-ce-demos-1.churn_detection.consumption_stats_yearly"
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID")
+    table_name = os.environ.get("CONSUMPTION_TABLE", "YOUR_PROJECT_ID.YOUR_DATASET.consumption_stats_yearly")
 
     client = bigquery.Client(project=project_id)
 

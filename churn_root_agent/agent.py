@@ -36,7 +36,7 @@ def patched_make_client_cert_ssl_context(cert_bytes, key_bytes, passphrase=None)
 auth_mtls.make_client_cert_ssl_context = patched_make_client_cert_ssl_context
 
 _, project_id = google.auth.default()
-os.environ["GOOGLE_CLOUD_PROJECT"] = "gab-ce-demos-1" 
+os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID")
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 

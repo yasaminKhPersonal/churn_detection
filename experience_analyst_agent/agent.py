@@ -8,7 +8,7 @@ import google.auth
 from google.cloud import bigquery
 
 _, project_id = google.auth.default()
-os.environ["GOOGLE_CLOUD_PROJECT"] = "gab-ce-demos-1" 
+os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID")
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
@@ -21,8 +21,8 @@ def read_interactions(user_id: str = None) -> str:
     Returns:
         A JSON string containing the interactions or an error message.
     """
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "gab-ce-demos-1")
-    table_name = "gab-ce-demos-1.churn_detection.omnichannel_customer_interactions"
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID")
+    table_name = os.environ.get("INTERACTIONS_TABLE", "YOUR_PROJECT_ID.YOUR_DATASET.omnichannel_customer_interactions")
 
     client = bigquery.Client(project=project_id)
 
