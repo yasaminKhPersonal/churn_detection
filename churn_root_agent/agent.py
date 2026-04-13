@@ -40,7 +40,7 @@ os.environ["GOOGLE_CLOUD_PROJECT"] = "gab-ce-demos-1"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
-from usage_analyst_agent.tools.usage_drop_detector import usage_drop_detector
+from usage_analyst_agent.agent import usage_drop_detector
 from experience_analyst_agent.agent import experience_analyst_agent
 
 # Updated Instruction to enforce a combined data structure and ranking
