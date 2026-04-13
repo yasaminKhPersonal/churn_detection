@@ -10,7 +10,7 @@ Multi-agent system for customer churn detection using Google Cloud Vertex AI and
 
 ## Configuration
 
-To run this project, create a `.env` file in the root directory and specify your Google Cloud Project and BigQuery table names:
+To run this project, copy the `.env.example` file to `.env` and specify your Google Cloud Project and BigQuery table names:
 
 ```env
 GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
