@@ -18,6 +18,15 @@ CONSUMPTION_TABLE=YOUR_PROJECT_ID.YOUR_DATASET.consumption_stats_yearly
 INTERACTIONS_TABLE=YOUR_PROJECT_ID.YOUR_DATASET.omnichannel_customer_interactions
 ```
 
+## Running the Playground
+
+To start the local development playground:
+
+```bash
+source .venv/bin/activate
+adk web . --reload_agents
+```
+
 ## Data Schema
 
 Here are the expected schemas for the BigQuery tables used by the agents:
