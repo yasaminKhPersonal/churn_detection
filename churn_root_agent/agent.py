@@ -42,26 +42,40 @@ os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
 from usage_analyst_agent.agent import usage_drop_detector
 from experience_analyst_agent.agent import experience_analyst_agent
+from jira_analyst_agent.agent import my_jira_agent
 
-# Updated Instruction to enforce a combined data structure and ranking
+# Updated Instruction to use Usage Drop instead of Consumption Drop
 combined_instruction = """You are a Churn Detection Root Agent. 
-Your goal is to produce a single, prioritized list of customers at risk of churn.
 
 WORKFLOW:
-1. You MUST FIRST call 'usage_drop_detector' to get customers with consumption drops. This tool returns a string with lines like "Customer CUST_XXXX: Raw Drop = YYYY.YY, Percentage Drop = ZZ.ZZ%". You MUST extract these numeric values. DO NOT SKIP THIS STEP.
-2. Call 'experience_analyst_agent' to get sentiment trends.
-3. COMBINE the signals: Create a unified record for every customer found in either tool.
-4. RANK the list: Place customers with the highest raw consumption value drop at the very top.
+1. **DETERMINE N**: Extract the number of customers requested from the user's prompt (e.g., "top 5"). Default to 3 if not specified.
+2. **DATA COLLECTION**: Call 'usage_drop_detector', 'experience_analyst_agent', and 'jira_analyst' (Project 'CHUR').
+3. **STRICT NUMERIC RULES (USAGE)**: 
+   - Columns: 'Usage Change (Raw)' and 'Usage Change (%)'.
+   - **DECREASE/DROP**: You MUST prefix with a MINUS SIGN (e.g., -500.00 or -12.5%).
+   - **INCREASE/GROWTH**: Show as a POSITIVE number (e.g., 250.00 or 5.2%).
+   - **NO DATA/STABLE**: Show as 0.00.
+4. **TICKET VELOCITY (30-DAY COUNT)**:
+   - Count the total number of Jira tickets created or resolved for the customer within the last 30 days (since March 14, 2026).
+   - Format MUST be: "[Total Tickets] / 30 days".
+   - ABSOLUTELY NO NULLS. If no tickets exist in this window, you MUST return "0 / 30 days".
+5. **STAGNATION CALCULATION**:
+   Get the 'created_at' date for the oldest open ticket from the Jira tool.
+   - Calculate the difference in days between that date and TODAY's DATE (April 13, 2026).
+   - Report only the whole number of days. If data is missing, state 'No open tickets'.
+   
+RANKING & MANDATORY FILL:
+- Rank primarily by negative Usage Change (most severe loss first).
+- **STRICT N-ROW REQUIREMENT**: You MUST return exactly N rows in the table. 
+- **BACKFILL LOGIC**: If there are fewer than N customers with usage drops, fill the remaining rows with customers who have the highest 'Jira Stagnation' or 'Negative Sentiment', even if their usage change is 0.00 or positive. Do not stop until you reach N rows.
 
 OUTPUT FORMAT:
-Return a Markdown table with the exact values extracted from the tools. Do NOT use placeholder text like "High Churn Risk" in the data columns.
-| Rank | Customer ID | Consumption Drop (Raw) | Consumption Drop (%) | Sentiment Trend | Churn Risk Level |
-| :--- | :--- | :--- | :--- | :--- | :--- |
+- Return exactly N rows in this Markdown table.
+| Rank | Customer ID | Usage Change (Raw) | Usage Change (%) | Sentiment | Jira Velocity (Tickets/Days) | Jira Stagnation (Days) | Churn Risk |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 
-In the "Consumption Drop (Raw)" column, put the exact Raw Drop value extracted. If not available, put "N/A".
-In the "Consumption Drop (%)" column, put the exact Percentage Drop value extracted. If not available, put "N/A".
-
-Priority is strictly determined by the magnitude of raw consumption value drop.
+EXPLANATION:
+- For each row, justify the risk. If a row was included via Backfill Logic (e.g., positive usage but high stagnation), explicitly note: "Included due to high support friction despite growth."
 """
 
 churn_root_agent = Agent(
@@ -71,7 +85,7 @@ churn_root_agent = Agent(
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
     instruction=combined_instruction,
-    tools=[usage_drop_detector, AgentTool(experience_analyst_agent)],
+    tools=[usage_drop_detector, AgentTool(experience_analyst_agent), AgentTool(my_jira_agent)],
 )
 
 app = App(
