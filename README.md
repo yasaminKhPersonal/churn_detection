@@ -51,3 +51,12 @@ Here are the expected schemas for the BigQuery tables used by the agents:
 | **Date** | DATE | NULLABLE |
 | **Source** | STRING | NULLABLE |
 | **Raw Interaction Text** | STRING | NULLABLE |
+
+### Jira Tickets
+
+The `jira_analyst_agent` expects Jira tickets to follow these conventions:
+
+- **Project**: The agent defaults to searching in the project specified in the prompt or code (e.g., 'CHUR').
+- **Customer ID**: Should be stored as a label (e.g., `CUST_XXXX`) on the ticket.
+- **Creation Date**: Used to calculate ticket velocity and stagnation (days open).
+- **Content**: Ticket descriptions and comments are analyzed for customer frustration and sentiment.
