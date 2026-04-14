@@ -53,10 +53,10 @@ def usage_drop_detector(query: str = "") -> str:
     )
     SELECT
         customer_id,
-        (sum_30d_prev - sum_30d) as raw_drop,
-        ((sum_30d_prev - sum_30d) / sum_30d_prev) * 100 as percentage_drop
+        (sum_30d - sum_30d_prev) as raw_drop,
+        ((sum_30d - sum_30d_prev) / sum_30d_prev) * 100 as percentage_drop
     FROM daily_sums_lagged
-    WHERE rn = 1 AND sum_30d < 0.8 * sum_30d_prev
+    WHERE rn = 1
     """
 
     try:
