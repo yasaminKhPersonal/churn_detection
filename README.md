@@ -7,7 +7,7 @@ Multi-agent system for customer churn detection using Google Cloud Vertex AI and
 - **`churn_root_agent`**: Orchestrates the workflow by calling specialized agents, combining their signals, and ranking at-risk customers primarily by negative usage change (most severe loss first).
 - **`usage_analyst_agent`**: Queries BigQuery to detect customers with significant drops in usage by comparing recent moving averages to historical data.
 - **`experience_analyst_agent`**: Analyzes customer interaction logs and uses Gemini to assess sentiment and identify frustrated customers.
-- **`jira_analyst_agent`**: Searches Jira for issues related to customers, assessing ticket stagnation and velocity to identify support friction.
+- **`jira_analyst_agent`**: Searches Jira for issues related to customers by leveraging the **Model Context Protocol (MCP)** to interface with the Jira REST API. It assesses ticket stagnation and velocity to identify support friction.
 
 ## Configuration
 
