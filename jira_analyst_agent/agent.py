@@ -29,7 +29,9 @@ from dotenv import load_dotenv
 import os
 
 # Load environment variables early
-load_dotenv('/usr/local/google/home/yasaminkh/demo/churn_detection/.env')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+dotenv_path = os.path.join(os.path.dirname(current_dir), '.env')
+load_dotenv(dotenv_path)
 from google.genai import Client
 
 # Monkey patch Gemini.api_client to force Vertex AI
